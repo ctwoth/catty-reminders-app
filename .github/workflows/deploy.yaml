@@ -1,4 +1,4 @@
-name: Continuous depoloy (CD)
+name: Continuous Deploy (CD)
 
 on:
   release:
