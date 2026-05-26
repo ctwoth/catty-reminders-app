@@ -34,10 +34,10 @@ def perform_update(commit_hash: str):
             check=True,
             capture_output=True
         )
-        # 3. Записать хеш коммита в файл окружения (будет подхвачен сервисом)
+        # hash log
         with open(DEPLOY_ENV_FILE, "w") as f:
             f.write(f"DEPLOY_REF={commit_hash}\n")
-        # 4. Перезапустить веб-приложение
+        # app rerun
         subprocess.run(
             ["sudo", "systemctl", "restart", SERVICE_NAME],
             check=True,
