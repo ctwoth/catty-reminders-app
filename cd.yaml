@@ -1,0 +1,19 @@
+name: CD
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VM via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: course.prafdin.ru
+          username: dev
+          port: 3108
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: bash ~/catty-reminders-app/run_app.sh ${{ github.sha }}
+          debug: true
