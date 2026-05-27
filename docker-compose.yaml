@@ -1,0 +1,41 @@
+name: catty
+services:
+  app:
+    image: ${APP_IMAGE:-ghcr.io/naumoffie/catty-reminders-app:latest}
+    container_name: catty-app
+    restart: unless-stopped
+    ports:
+      - "8181:8181"
+    volumes:
+      - ./config.json:/app/config.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - catty-network
+  db:
+    image: mysql:8.0
+    container_name: catty-db
+    restart: unless-stopped
+    
+    environment:
+      - MYSQL_ROOT_PASSWORD=cat123
+      - MYSQL_DATABASE=catty
+    
+    volumes:
+      - db_data:/var/lib/mysql
+      
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    networks:
+      - catty-network
+networks:
+  catty-network:
+    driver: bridge
+
+volumes:
+  db_data:
