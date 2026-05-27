@@ -45,12 +45,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt pytest-playwright
+          pip install --no-cache-dir -r requirements.txt pytest-playwright
           playwright install --with-deps chromium
 
       - name: Patch config for CI
         run: |
-          # Заменяем "host": "db" на "host": "127.0.0.1"
           sed -i 's/"host": "db"/"host": "127.0.0.1"/g' config.json
 
       - name: Start app
@@ -92,7 +91,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GH_PAT }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
