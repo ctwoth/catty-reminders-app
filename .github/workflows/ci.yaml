@@ -3,12 +3,12 @@ name:  Continuous Integration (CI)
 on:
   push:
     branches:
-      - lab3
-      - lab3_autotests*
+      - lab4
+      - lab4_autotests*
   pull_request:
     branches:
-      - lab3
-      - lab3_autotests*
+      - lab4
+      - lab4_autotests*
 
 jobs:
   test:
