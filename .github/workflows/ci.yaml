@@ -3,13 +3,10 @@ name:  Continuous Integration (CI)
 on:
   push:
     branches:
-      - lab4
-      - lab4_autotests*
+      - lab4_*
   pull_request:
     branches:
-      - lab4
-      - lab4_autotests*
-
+      - lab4_*
 jobs:
   test:
     runs-on: ubuntu-latest
