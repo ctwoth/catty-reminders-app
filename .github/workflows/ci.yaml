@@ -3,12 +3,12 @@ name:  Continuous Integration (CI)
 on:
   push:
     branches:
-      - lab2
-      - lab2_autotests*
+      - lab3
+      - lab3_autotests*
   pull_request:
     branches:
-      - lab2
-      - lab2_autotests*
+      - lab3
+      - lab3_autotests*
 
 jobs:
   test:
@@ -65,7 +65,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GH_PAT }}   # нужен Personal Access Token
+          password: ${{ secrets.GH_PAT }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
