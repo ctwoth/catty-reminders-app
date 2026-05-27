@@ -1,34 +1,38 @@
-    environment:
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - MARIADB_DATABASE=${MARIADB_DATABASE}
-      - MARIADB_USER=${MARIADB_USER}
-      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+name: catty
+services:
+  app:
+    image: ${APP_IMAGE:-ghcr.io/naumoffie/catty-reminders-app:latest}
+    container_name: catty-app
+    restart: unless-stopped
     ports:
-      - "${HOST_DB_PORT}:${CONTAINER_DB_PORT}"
+      - "8181:8181"
     volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - catty-network
-
-  catty-app:
-    image: ${IMAGE}
-    container_name: ${APP_CONTAINER_NAME}
-    restart: always
-    ports:
-      - "${HOST_APP_PORT}:${CONTAINER_APP_PORT}"
-    volumes:
-      - ./config.json:/catty-reminders-app/config.json:ro
+      - ./config.json:/app/config.json:ro
     depends_on:
       db:
         condition: service_healthy
     networks:
       - catty-network
-
+  db:
+    image: mysql:8.0
+    container_name: catty-db
+    restart: unless-stopped
+    
+    environment:
+      - MYSQL_ROOT_PASSWORD=cat123
+      - MYSQL_DATABASE=catty
+    
+    volumes:
+      - db_data:/var/lib/mysql
+      
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    networks:
+      - catty-network
 networks:
   catty-network:
     driver: bridge

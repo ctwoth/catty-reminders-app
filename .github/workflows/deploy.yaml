@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare image name (lowercase)
+      - name: Prepare image name
         id: prep
         run: |
           REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
@@ -22,12 +22,14 @@ jobs:
           port: 3108
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            cd /home/dev/catty-reminders-app
+            # Login to GHCR
             echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            CONTAINER_NAME="catty-app"
-            IMAGE="ghcr.io/${{ steps.prep.outputs.repo_lower }}:${{ github.sha }}"
-            docker pull $IMAGE
-            docker stop $CONTAINER_NAME || true
-            docker rm $CONTAINER_NAME || true
-            docker run -d --name $CONTAINER_NAME -p 8181:8181 --restart always $IMAGE
+            # Create .env file with DEPLOY_REF
+            echo "DEPLOY_REF=${{ github.sha }}" > .env
+            # Stop and remove old stack
+            docker compose down || true
+            # Pull latest images and start
+            docker compose up -d --pull always
+            # Cleanup old images
             docker image prune -f
-          debug: true
