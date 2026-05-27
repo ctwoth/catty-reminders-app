@@ -19,8 +19,8 @@ services:
     restart: unless-stopped
     
     environment:
-      - MYSQL_ROOT_PASSWORD=cat123
-      - MYSQL_DATABASE=catty
+      - MYSQL_ROOT_PASSWORD=mypass
+      - MYSQL_DATABASE=catty_reminders
     
     volumes:
       - db_data:/var/lib/mysql
