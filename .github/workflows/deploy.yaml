@@ -25,8 +25,6 @@ jobs:
             cd /home/dev/catty-reminders-app
             # Login to GHCR
             echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            # Create .env file with DEPLOY_REF
-            echo "DEPLOY_REF=${{ github.sha }}" > .env
             # Stop and remove old stack
             docker compose down || true
             # Pull latest images and start
